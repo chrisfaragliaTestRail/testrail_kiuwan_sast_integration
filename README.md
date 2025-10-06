@@ -29,38 +29,6 @@ This repository demonstrates a **low-code approach** to integrating **Kiuwan SAS
 - **TestRail** instance with CLI access configured.  
 - JUnit XML report generator (script/tooling to convert Kiuwan output).
 
----
-
-## Usage (example)
-
-1. Analyze code with Kiuwan (example CLI usage, adapt to your environment):
-    ```bash
-    kiuwan analyze -a myApp -s . --format json -o kiuwan-output.json
-    ```
-
-2. Export audit checkpoints as JUnit XML (example—replace with your converter or Kiuwan API call):
-    ```bash
-    # hypothetical script that converts Kiuwan JSON -> junit.xml
-    python3 tools/kiuwan-to-junit.py kiuwan-output.json results/junit.xml
-    ```
-
-3. Push JUnit XML to TestRail using the TestRail CLI:
-    ```bash
-    testrail-cli results:add --project MyProject --suite Default --file results/junit.xml
-    ```
-
-*(Exact CLI flags and commands vary by tooling and environment — this is a conceptual example.)*
-
----
-
-## Sample Output
-
-Test results in TestRail may look like:
-- ✅ Passed (based on passing audit thresholds)  
-- ❌ Failed (if audit thresholds not met or critical issues found)
-
----
-
 ## Benefits
 
 - Simplifies SAST result tracking in TestRail.  
