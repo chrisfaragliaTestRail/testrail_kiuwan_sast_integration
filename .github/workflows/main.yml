@@ -25,7 +25,7 @@ jobs:
           curl -sSL "https://www.kiuwan.com/pub/analyzer/KiuwanLocalAnalyzer.zip" -o kla.zip
           unzip -oq kla.zip -d kla
 
-      - name: Run Kiuwan static analysis
+      - name: Run Kiuwan SAST Scan
         env:
           KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
           KIUWAN_PWD: ${{ secrets.KIUWAN_PWD }}
@@ -41,3 +41,57 @@ jobs:
             --user "$KIUWAN_USER" \
             --pass "$KIUWAN_PWD" \
           echo "✅ Kiuwan scan finished"
+
+                - name: Get last successful delivery code from Kiuwan API
+        id: fetch_delivery
+        env:
+          KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
+          KIUWAN_PWD: ${{ secrets.KIUWAN_PWD }}
+          KIUWAN_API: "https://api.kiuwan.com"
+        run: |
+          echo "🔁 Fetching last successful delivery code from Kiuwan API..."
+          response=$(curl -sSL --user "$KIUWAN_USER:$KIUWAN_PWD" "$KIUWAN_API/deliveries/last_analysis")
+
+          echo "📦 Raw API response:"
+          echo "$response"
+
+          # Extract nested field: lastSuccessfulDelivery.code
+          code=$(echo "$response" | jq -r '.lastSuccessfulDelivery.code // empty')
+
+          if [ -z "$code" ] || [ "$code" = "null" ]; then
+            echo "⚠️ Unable to extract lastSuccessfulDelivery.code from response"
+            exit 1
+          fi
+
+          echo "🏷 Last Successful Delivery Code: $code"
+          echo "delivery_code=$code" >> $GITHUB_OUTPUT
+
+      - name: Output SAST Scan Code
+        run: |
+          echo "🚀 Last Successful SAST Scan Code: ${{ steps.fetch_delivery.outputs.delivery_code }}"
+
+      - name: Download JUnit XML Report from Kiuwan SAST Scan
+        id: fetch_junit
+        env:
+          KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
+          KIUWAN_PWD: ${{ secrets.KIUWAN_PWD }}
+          KIUWAN_API: "https://api.kiuwan.com"
+          DELIVERY_CODE: ${{ steps.fetch_delivery.outputs.delivery_code }}
+        run: |
+          echo "🧩 Fetching JUnit XML for delivery code: $DELIVERY_CODE"
+          curl -sSL --user "$KIUWAN_USER:$KIUWAN_PWD" \
+            "$KIUWAN_API/deliveries/junit?deliveryCode=$DELIVERY_CODE" \
+            -o kiuwan_sast.xml
+
+          if [ ! -s kiuwan_sast.xml ]; then
+            echo "❌ Failed to retrieve kiuwan_sast.xml"
+            exit 1
+          fi
+
+          echo "✅ JUnit XML saved as kiuwan_sast.xml"
+
+      - name: Upload JUnit XML as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kiuwan-sast-report
+          path: kiuwan_sast.xml
