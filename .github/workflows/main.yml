@@ -31,7 +31,7 @@ jobs:
           KIUWAN_PWD: ${{ secrets.KIUWAN_PWD }}
         run: |
           cd kla/KiuwanLocalAnalyzer
-          chmod +x bin/agent.sh
+          chmod u+x bin/agent.sh
           echo "🔍 Running Kiuwan scan for $APP_NAME"
           ./bin/agent.sh \
             -s "$SRC_PATH" \
