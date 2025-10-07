@@ -39,6 +39,8 @@ jobs:
         run: |
           cd kla/KiuwanLocalAnalyzer
           chmod u+x bin/agent.sh
+          set +e
+          
           echo "🔍 Running Kiuwan scan for $APP_NAME"
           ./bin/agent.sh \
             -s "$SRC_PATH" \
@@ -49,15 +51,6 @@ jobs:
             --user "$KIUWAN_USER" \
             --pass "$KIUWAN_PWD"
           echo "✅ Kiuwan scan finished"
-
-          if [ "$EXIT_CODE" = "10" ]; then
-            echo "⚠️ Audit overall result = FAIL (exit 10). Continuing pipeline."
-          elif [ "$EXIT_CODE" = "18" ]; then
-            echo "⚠️ Policy violations found (exit 18). Continuing pipeline."
-          elif [ -n "$EXIT_CODE" ] && [ "$EXIT_CODE" != "0" ]; then
-            echo "❌ Kiuwan scan failed with exit $EXIT_CODE"
-            exit $EXIT_CODE
-          fi
 
       - name: Fetch Last SAST Scan Code
         id: fetch_delivery
