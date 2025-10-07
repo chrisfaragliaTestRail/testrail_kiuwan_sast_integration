@@ -105,6 +105,9 @@ jobs:
 
           echo "✅ JUnit XML saved as kiuwan_sast.xml"
 
+          # 👇 Temporary patch: replace 'api.kiuwan.com' with 'kiuwan.com' in the XML file
+          sed -i 's|api\.kiuwan\.com|kiuwan.com|g' kiuwan_sast.xml
+
       - name: Upload JUnit XML as artifact
         uses: actions/upload-artifact@v4
         with:
