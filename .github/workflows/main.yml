@@ -15,9 +15,16 @@ jobs:
     env:
       APP_NAME: "Kiuwan Sample Java App Scan Demo"
       SRC_PATH: "."
+      TESTRAIL_USER: chris.faraglia@gurock.com
+      TESTRAIL_URL: https://testrailsademo.testrail.io/
+      PROJECT_NAME: TRPD Test Demo
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4.5.0
+        with:
+          python-version: '3.10'
 
       - name: Download Kiuwan Local Analyzer
         run: |
@@ -101,3 +108,16 @@ jobs:
         with:
           name: kiuwan-sast-report
           path: kiuwan_sast.xml
+          
+      - name: Execute TestRail CLI to upload results
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          pip install trcli
+          trcli -y \
+            -h ${{ env.TESTRAIL_URL }} \
+            --project "${{ env.PROJECT_NAME }}" \
+            -u ${{ env.TESTRAIL_USER }} \
+            -p "${{ secrets.TESTRAIL_USER_PW }}" \
+            parse_junit \
+            -f "kiuwan_sast.xml" \
+            --title "Kiuwan SAST Audit Checkpoint Tests"
