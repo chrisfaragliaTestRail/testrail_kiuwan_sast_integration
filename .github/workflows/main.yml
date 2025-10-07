@@ -39,4 +39,5 @@ jobs:
             -c \
             --user "$KIUWAN_USER" \
             --pass "$KIUWAN_PWD" \
+            --verbose
           echo "✅ Kiuwan scan finished"
