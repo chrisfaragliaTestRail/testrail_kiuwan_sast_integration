@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_NAME: "Kiuwan Sample Java App Scan Demo"
-      SRC_PATH: "src/main/java/com/example/vuln"
+      SRC_PATH: "src/main/java/com/testrail/kiuwan/demo"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
