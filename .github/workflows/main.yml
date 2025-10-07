@@ -25,7 +25,7 @@ jobs:
           curl -sSL "https://www.kiuwan.com/pub/analyzer/KiuwanLocalAnalyzer.zip" -o kla.zip
           unzip -oq kla.zip -d kla
 
-      - name: Run Kiuwan SAST Scan
+      - name: Run Kiuwan static analysis
         env:
           KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
           KIUWAN_PWD: ${{ secrets.KIUWAN_PWD }}
@@ -39,10 +39,10 @@ jobs:
             -c \
             -wr \
             --user "$KIUWAN_USER" \
-            --pass "$KIUWAN_PWD" \
+            --pass "$KIUWAN_PWD"
           echo "✅ Kiuwan scan finished"
 
-                - name: Get last successful delivery code from Kiuwan API
+      - name: Get last successful delivery code from Kiuwan API
         id: fetch_delivery
         env:
           KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
@@ -66,11 +66,11 @@ jobs:
           echo "🏷 Last Successful Delivery Code: $code"
           echo "delivery_code=$code" >> $GITHUB_OUTPUT
 
-      - name: Output SAST Scan Code
+      - name: Print delivery code
         run: |
-          echo "🚀 Last Successful SAST Scan Code: ${{ steps.fetch_delivery.outputs.delivery_code }}"
+          echo "🚀 Last Successful Delivery Code: ${{ steps.fetch_delivery.outputs.delivery_code }}"
 
-      - name: Download JUnit XML Report from Kiuwan SAST Scan
+      - name: Download JUnit XML report from Kiuwan
         id: fetch_junit
         env:
           KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
