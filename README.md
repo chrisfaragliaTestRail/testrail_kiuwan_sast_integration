@@ -9,7 +9,7 @@ This repository demonstrates a **low-code approach** to integrating **Kiuwan SAS
 ## Overview
 
 - **Kiuwan** performs static code analysis and outputs results including audit checkpoints.  
-- These results are converted into **JUnit XML** format for compatibility with TestRail.  
+- These results are converted into **JUnit XML** format for compatibility with TestRail CLI integration.  
 - Using the **TestRail CLI**, test cases are automatically created and updated in TestRail with PASS/FAIL status.
 
 ---
@@ -25,15 +25,15 @@ This repository demonstrates a **low-code approach** to integrating **Kiuwan SAS
 
 ## Prerequisites
 
-- A working **Kiuwan** account and CLI tool.  
-- **TestRail** instance with CLI access configured.  
-- JUnit XML report generator (script/tooling to convert Kiuwan output).
+- A working **Kiuwan** account and TestRail instance.  
+- **TestRail** instance with API access configured.  
+- Python3
 
 ## Benefits
 
 - Simplifies SAST result tracking in TestRail.  
 - Enables automated test result updates.  
-- Integrates security audits into QA workflows.  
+- Integrates security audits into QA workflows, "Quality Through Security".  
 - Provides a reproducible environment to demonstrate Kiuwan + TestRail integration using intentionally vulnerable Java code.
 
 ---
