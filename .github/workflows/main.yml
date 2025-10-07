@@ -80,11 +80,7 @@ jobs:
 
           echo "🏷 Last Successful Delivery Code: $code"
           echo "delivery_code=$code" >> $GITHUB_OUTPUT
-
-      - name: Print Last SAST Scan Code (INFO LOGGING)
-        run: |
-          echo "🚀 Last Successful Delivery Code: ${{ steps.fetch_delivery.outputs.delivery_code }}"
-
+          
       - name: Download JUnit XML Report From Kiuwan SAST Scan
         id: fetch_junit
         env:
@@ -107,14 +103,8 @@ jobs:
 
           # 👇 Temporary patch: replace 'api.kiuwan.com' with 'kiuwan.com' in the XML file
           sed -i 's|api\.kiuwan\.com|kiuwan.com|g' kiuwan_sast.xml
-
-      - name: Upload JUnit XML as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: kiuwan-sast-report
-          path: kiuwan_sast.xml
           
-      - name: Execute TestRail CLI to upload results
+      - name: Execute TestRail CLI to Upload Results to TestRail
         working-directory: ${{ env.WORKING_DIR }}
         run: |
           pip install trcli
