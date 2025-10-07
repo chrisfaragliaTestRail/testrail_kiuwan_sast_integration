@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  kiuwan_scan_and_report:
+  kiuwan_sast_testrail_integration:
     runs-on: ubuntu-latest
     env:
       APP_NAME: "Kiuwan Sample Java App Scan Demo"
