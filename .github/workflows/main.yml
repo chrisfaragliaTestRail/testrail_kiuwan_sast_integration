@@ -1,0 +1,40 @@
+name: Kiuwan SAST → TestRail Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  kiuwan_scan_and_report:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: "Kiuwan Sample Java App Scan Demo"
+      SRC_PATH: "src/main/java/com/example/vuln"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Kiuwan Local Analyzer
+        run: |
+          echo "🔍 Downloading Kiuwan Local Analyzer..."
+          curl -sSL "https://www.kiuwan.com/pub/analyzer/KiuwanLocalAnalyzer.zip" -o kla.zip
+          unzip -oq kla.zip -d kla
+
+      - name: Run Kiuwan static analysis
+        env:
+          KIUWAN_USER: ${{ secrets.KIUWAN_USER }}
+          KIUWAN_PWD: ${{ secrets.KIUWAN_PWD }}
+        run: |
+          cd kla/KiuwanLocalAnalyzer
+          chmod +x bin/agent.sh
+          echo "🔍 Running Kiuwan scan for $APP_NAME"
+          ./bin/agent.sh \
+            -s "$SRC_PATH" \
+            -n "$APP_NAME" \
+            -c \
+            --user "$KIUWAN_USER" \
+            --pass "$KIUWAN_PWD" \
+            --analysisScope complete
+          echo "✅ Kiuwan scan finished"
