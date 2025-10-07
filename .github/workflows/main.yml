@@ -51,8 +51,13 @@ jobs:
           KIUWAN_API: "https://api.kiuwan.com"
         run: |
           echo "🔁 Fetching last successful delivery code from Kiuwan API..."
-          response=$(curl -sSL --user "$KIUWAN_USER:$KIUWAN_PWD" "$KIUWAN_API/deliveries/last_analysis?application=$APP_NAME")
+          # URL-encode the application name safely
+          encoded_app=$(printf "%s" "$APP_NAME" | jq -sRr @uri)
 
+          # Perform the API call
+          response=$(curl -sSL --user "$KIUWAN_USER:$KIUWAN_PWD" \
+            "$KIUWAN_API/deliveries/last_analysis?application=$encoded_app")
+          
           echo "📦 Raw API response:"
           echo "$response"
 
