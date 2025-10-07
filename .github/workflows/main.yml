@@ -74,7 +74,7 @@ jobs:
           code=$(echo "$response" | jq -r '.lastSuccessfulDelivery.code // .analysisCode // empty')
 
           if [ -z "$code" ] || [ "$code" = "null" ]; then
-            echo "⚠️ Unable to extract lastSuccessfulDelivery.code from response"
+            echo "⚠️ Unable to extract lastSuccessfulDelivery.analysisCode from response"
             exit 1
           fi
 
