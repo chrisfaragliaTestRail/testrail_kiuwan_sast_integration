@@ -61,8 +61,8 @@ jobs:
           echo "📦 Raw API response:"
           echo "$response"
 
-          # Extract nested field: lastSuccessfulDelivery.code
-          code=$(echo "$response" | jq -r '.lastSuccessfulDelivery.code // empty')
+          # Try to extract delivery code from multiple possible fields
+          code=$(echo "$response" | jq -r '.lastSuccessfulDelivery.code // .analysisCode // empty')
 
           if [ -z "$code" ] || [ "$code" = "null" ]; then
             echo "⚠️ Unable to extract lastSuccessfulDelivery.code from response"
