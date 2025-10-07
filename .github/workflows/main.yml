@@ -37,6 +37,7 @@ jobs:
             -s "$SRC_PATH" \
             -n "$APP_NAME" \
             -c \
+            -wr \
             --user "$KIUWAN_USER" \
             --pass "$KIUWAN_PWD" \
           echo "✅ Kiuwan scan finished"
