@@ -39,5 +39,4 @@ jobs:
             -c \
             --user "$KIUWAN_USER" \
             --pass "$KIUWAN_PWD" \
-            --analysisScope complete
           echo "✅ Kiuwan scan finished"
